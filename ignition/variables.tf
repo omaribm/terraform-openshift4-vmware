@@ -6,6 +6,10 @@ variable "cluster_cidr" {
   type = string
 }
 
+variable "gateway" {
+	type = string 
+}
+
 variable "cluster_hostprefix" {
   type = string
 }

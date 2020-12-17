@@ -8,7 +8,6 @@ locals {
 
 resource "vsphere_virtual_machine" "vm" {
   for_each = var.hostnames_ip_addresses
-
   name = element(split(".", each.key), 0)
 
   resource_pool_id = var.resource_pool_id
@@ -45,6 +44,6 @@ resource "vsphere_virtual_machine" "vm" {
   extra_config = {
     "guestinfo.ignition.config.data"           = base64encode(var.ignition)
     "guestinfo.ignition.config.data.encoding"  = "base64"
-    "guestinfo.afterburn.initrd.network-kargs" = "ip=${each.value}::${cidrhost(var.machine_cidr, 1)}:${cidrnetmask(var.machine_cidr)}:${element(split(".", each.key), 0)}:ens192:none ${join(" ", formatlist("nameserver=%v", var.dns_addresses))}"
+    "guestinfo.afterburn.initrd.network-kargs" = "ip=${each.value}::${var.gateway}:${cidrnetmask(var.machine_cidr)}:${element(split(".", each.key), 0)}:ens192:none ${join(" ", formatlist("nameserver=%v", var.dns_addresses))}"
   }
 }

@@ -5,12 +5,12 @@
 
 locals {
   cluster_domain      = "${var.cluster_id}.${var.base_domain}"
-  bootstrap_fqdns     = ["bootstrap-0.${local.cluster_domain}"]
-  lb_fqdns            = ["lb-0.${local.cluster_domain}"]
+  bootstrap_fqdns     = ["${var.cluster_id}-bootstrap.${local.cluster_domain}"]
+  lb_fqdns            = ["${var.cluster_id}-lb.${local.cluster_domain}"]
   api_lb_fqdns        = formatlist("%s.%s", ["api", "api-int", "*.apps"], local.cluster_domain)
-  control_plane_fqdns = [for idx in range(var.control_plane_count) : "control-plane-${idx}.${local.cluster_domain}"]
-  compute_fqdns       = [for idx in range(var.compute_count) : "compute-${idx}.${local.cluster_domain}"]
-  storage_fqdns       = [for idx in range(var.storage_count) : "storage-${idx}.${local.cluster_domain}"]
+  control_plane_fqdns = [for idx in range(var.control_plane_count) : "${var.cluster_id}-control-plane-${idx}.${local.cluster_domain}"]
+  compute_fqdns       = [for idx in range(var.compute_count) : "${var.cluster_id}-compute-${idx}.${local.cluster_domain}"]
+  storage_fqdns       = [for idx in range(var.storage_count) : "${var.cluster_id}-storage-${idx}.${local.cluster_domain}"]
 }
 
 provider "vsphere" {
@@ -56,7 +56,7 @@ resource "vsphere_resource_pool" "resource_pool" {
 }
 
 resource "vsphere_folder" "folder" {
-  path          = var.cluster_id
+  path          = "${var.vsphere_cluster}/omar/${var.cluster_id}"
   type          = "vm"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
@@ -79,6 +79,7 @@ resource "local_file" "write_public_key" {
 }
 
 module "lb" {
+	gateway = var.gateway
   count = var.create_loadbalancer_vm ? 1 : 0
   source        = "./lb"
   lb_ip_address = var.lb_ip_address
@@ -133,6 +134,7 @@ module "lb" {
 
 module "ignition" {
   source              = "./ignition"
+	gateway             = var.gateway
   ssh_public_key      = chomp(tls_private_key.installkey.public_key_openssh)
   base_domain         = var.base_domain
   cluster_id          = var.cluster_id
@@ -152,7 +154,7 @@ module "ignition" {
 
 module "bootstrap" {
   source = "./vm"
-
+	gateway = var.gateway
   ignition = module.ignition.bootstrap_ignition
 
   hostnames_ip_addresses = zipmap(
@@ -180,6 +182,7 @@ module "bootstrap" {
 module "control_plane_vm" {
   source = "./vm"
 
+	gateway = var.gateway
   hostnames_ip_addresses = zipmap(
     local.control_plane_fqdns,
     var.control_plane_ip_addresses
@@ -207,6 +210,7 @@ module "control_plane_vm" {
 module "compute_vm" {
   source = "./vm"
 
+	gateway = var.gateway
   hostnames_ip_addresses = zipmap(
     local.compute_fqdns,
     var.compute_ip_addresses
@@ -234,6 +238,7 @@ module "compute_vm" {
 module "storage_vm" {
   source = "./vm"
 
+	gateway = var.gateway
   hostnames_ip_addresses = zipmap(
     local.storage_fqdns,
     var.storage_ip_addresses

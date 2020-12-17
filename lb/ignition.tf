@@ -54,7 +54,7 @@ data "ignition_file" "static_ip" {
       cluster_domain = var.cluster_domain
       ens_device     = "ens192"
       prefix         = element(split("/", var.machine_cidr), 1)
-      gateway        = local.dual_homed ? "" : cidrhost(var.machine_cidr, 1)
+      gateway        = local.dual_homed ? "" : var.gateway
     })
   }
 }
@@ -73,7 +73,7 @@ data "ignition_file" "static_ip_loadbalancer" {
       cluster_domain = var.cluster_domain
       ens_device     = "ens224"
       prefix         = element(split("/", var.machine_cidr), 1)
-      gateway        = cidrhost(var.loadbalancer_cidr, 1)
+      gateway        = var.gateway
     })
   }
 }

@@ -49,6 +49,10 @@ variable "loadbalancer_network" {
   default     = ""
 }
 
+variable "gateway" {
+  type = string
+}
+
 variable "vm_dns_addresses" {
   type        = list(string)
   description = "List of DNS servers to use for your OpenShift Nodes"

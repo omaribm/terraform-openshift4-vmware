@@ -7,6 +7,10 @@ variable "ignition" {
   default = ""
 }
 
+variable "gateway" {
+  type = string
+}
+
 variable "disk_thin_provisioned" {
   type = bool
 }
