@@ -40,6 +40,8 @@ You might have to modify the folder path in `main.tf`.
 
 Also note that the script will try to create a resource pool with the name of your `cluster_id`; if that resource pool exists, it will fail. 
 
+To monitor the install, `cd` into `installers/$cluster_id/` and run `./openshift-install wait-for install-complete --log-level debug`
+
 ## terraform variables
 
 | Variable                     | Description                                                  | Type | Default |
