@@ -40,6 +40,7 @@ terraform apply
 
 | Variable                     | Description                                                  | Type | Default |
 | ---------------------------- | ------------------------------------------------------------ | ---- | ------- |
+| gateway               | gateway of your network                    | string | - |
 | vsphere_server               | FQDN or IP Address of your vSphere Server                    | string | - |
 | vsphere_user | vSphere username                                             | string | - |
 | vsphere_password             | vSphere password                                             | string | - |
@@ -48,7 +49,7 @@ terraform apply
 | vsphere_datastore       | vSphere Datastore for OpenShift nodes                        | string | - |
 | vm_template | Name of CoreOS OVA template from prereq #2 | string | - |
 | vm_network | vSphere Network for OpenShift nodes                   | string | - |
-| loadbalancer_network       | vSphere Network for Loadbalancer/DNS VM                      | string | -                              |
+| loadbalancer_network       | vSphere Network for Loadbalancer/DNS VM (optional, leave blank to only use one network for lb and nodes)                     | string | -                              |
 | vm_dns_addresses           | List of DNS servers to use for your OpenShift Nodes          | list   | 8.8.8.8, 8.8.4.4               |
 | cluster_id                 | This cluster id must be of max length 27 and must have only alphanumeric or hyphen characters. | string | -                              |
 | base_domain                | Base domain for your OpenShift Cluster                       | string | -                              |
