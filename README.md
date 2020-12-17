@@ -36,6 +36,10 @@ terraform plan
 terraform apply
 ```
 
+You might have to modify the folder path in `main.tf`.
+
+Also note that the script will try to create a resource pool with the name of your `cluster_id`; if that resource pool exists, it will fail. 
+
 ## terraform variables
 
 | Variable                     | Description                                                  | Type | Default |
