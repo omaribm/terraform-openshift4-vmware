@@ -56,7 +56,7 @@ resource "vsphere_resource_pool" "resource_pool" {
 }
 
 resource "vsphere_folder" "folder" {
-  path          = "${var.vsphere_cluster}/omar/${var.cluster_id}"
+  path          = "${var.vsphere_cluster}/${var.cluster_id}"
   type          = "vm"
   datacenter_id = data.vsphere_datacenter.dc.id
 }
